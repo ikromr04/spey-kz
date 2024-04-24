@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Mail;
 use App\Helpers\Helper;
 use App\Models\Company;
 use App\Models\History;
@@ -446,5 +447,25 @@ class PagesController extends Controller
     )->find($siteID);
 
     return view('pages.contacts.index', compact('speySites', 'activeSite', 'page'));
+  }
+
+  public function ae(Request $request)
+  {
+    Mail::send('emails.ae-send', [
+      'initials' => $request->inititals,
+      'age' => $request->age,
+      'weight' => $request->weight,
+      'hight' => $request->hight,
+      'event' => $request->event,
+      'suspect' => $request->suspect,
+      'name' => $request->name,
+      'email' => $request->email,
+      'phone' => $request->phone,
+    ], function ($message) {
+      $message->to('drugsafety@evolet.co.uk');
+      $message->subject('Сообщение о жалобе на продукт');
+    });
+
+    return back();
   }
 }
